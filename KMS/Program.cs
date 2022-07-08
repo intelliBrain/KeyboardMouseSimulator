@@ -94,6 +94,17 @@ namespace KMS
                             Console.SetCursorPosition(0, 0);
                             Console.WriteLine($"{dayOfWeek} | {now:HH:mm:ss} | {outputText}".EnsureExactLength(90));
                             Console.ResetColor();
+
+
+                            Console.ForegroundColor = ConsoleColor.DarkGray;
+                            Console.SetCursorPosition(0, 5);
+                            Console.WriteLine($"Work start      : {workStart:HH:mm}");
+                            Console.WriteLine($"Work end (Mo-Do): {workEndMoDo:HH:mm}");
+                            Console.WriteLine($"Work end (Fr)   : {workEndFr:HH:mm}");
+                            Console.WriteLine($"Day State       : Mo-Do={isMoDo}, Fr={isFriday}, Weekend={isWeekend} => Paused={isPaused}");
+                            Console.ResetColor();
+
+
                             nextUpdate = now + updateInterval;
                         }
 
