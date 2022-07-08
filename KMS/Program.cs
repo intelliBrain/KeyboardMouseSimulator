@@ -41,10 +41,15 @@ namespace KMS
                             var workEndMoDo = new DateTime(now.Year, now.Month, now.Day, 18, 30, 00);
                             var workEndFr = new DateTime(now.Year, now.Month, now.Day, 17, 30, 00);
                             var workStart = new DateTime(now.Year, now.Month, now.Day, 07, 00, 00);
+                            var workLunchStart = new DateTime(now.Year, now.Month, now.Day, 11, 45, 00);
+                            var workLunchEnd = new DateTime(now.Year, now.Month, now.Day, 12, 30, 00);
                             var dayOfWeek = now.DayOfWeek;
                             var isWeekend = dayOfWeek == DayOfWeek.Sunday || dayOfWeek == DayOfWeek.Sunday;
                             var isFriday = dayOfWeek == DayOfWeek.Friday;
                             var isMoDo = !isFriday && !isWeekend;
+                            var isLunch = (now >= workLunchStart && now <= workLunchEnd);
+                            var isBeforeWork = false;
+                            var isAfterWork = false;
 
                             var isPaused = false;
 
@@ -56,17 +61,25 @@ namespace KMS
                             else if (isFriday && now > workEndFr)
                             {
                                 isPaused = true;
+                                isAfterWork = true;
                                 outputText = $"PAUSED | after work end: {workEndFr:HH:mm} (Fridays)";
                             }
                             else if (isMoDo && now > workEndMoDo)
                             {
                                 isPaused = true;
+                                isAfterWork = true;
                                 outputText = $"PAUSED | after work end: {workEndMoDo:HH:mm} (Mo - Do)";
                             }
                             else if (now < workStart)
                             {
                                 isPaused = true;
+                                isBeforeWork = true;
                                 outputText = $"PAUSED | before work start: {workStart:HH:mm}";
+                            }
+                            else if (isLunch)
+                            {
+                                isPaused = true;
+                                outputText = $"PAUSED | lunch: {workLunchStart:HH:mm} - {workLunchEnd:HH:mm}";
                             }
                             else if (autoPauseTime < DateTime.MaxValue && now > autoPauseTime)
                             {
@@ -99,9 +112,10 @@ namespace KMS
                             Console.ForegroundColor = ConsoleColor.DarkGray;
                             Console.SetCursorPosition(0, 5);
                             Console.WriteLine($"Work start      : {workStart:HH:mm}");
+                            Console.WriteLine($"Lunch           : {workLunchStart:HH:mm} - {workLunchEnd:HH:mm}");
                             Console.WriteLine($"Work end (Mo-Do): {workEndMoDo:HH:mm}");
                             Console.WriteLine($"Work end (Fr)   : {workEndFr:HH:mm}");
-                            Console.WriteLine($"Day State       : Mo-Do={isMoDo}, Fr={isFriday}, Weekend={isWeekend} => Paused={isPaused}");
+                            Console.WriteLine($"Day State       : Mo-Do={isMoDo}, Fr={isFriday}, Weekend={isWeekend}, Lunch={isLunch}, BeforeWork={isBeforeWork}, AfterWork={isAfterWork} => Paused={isPaused}");
                             Console.ResetColor();
 
 
