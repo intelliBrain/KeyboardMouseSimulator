@@ -38,45 +38,61 @@ namespace KMS
                         if (now > nextUpdate)
                         {
                             var outputText = "";
-                            var workEnd = new DateTime(now.Year, now.Month, now.Day, 18, 30, 00);
+                            var workEndMoDo = new DateTime(now.Year, now.Month, now.Day, 18, 30, 00);
+                            var workEndFr = new DateTime(now.Year, now.Month, now.Day, 17, 30, 00);
                             var workStart = new DateTime(now.Year, now.Month, now.Day, 07, 00, 00);
                             var dayOfWeek = now.DayOfWeek;
                             var isWeekend = dayOfWeek == DayOfWeek.Sunday || dayOfWeek == DayOfWeek.Sunday;
+                            var isFriday = dayOfWeek == DayOfWeek.Friday;
+                            var isMoDo = !isFriday && !isWeekend;
 
                             var isPaused = false;
 
                             if (isWeekend)
                             {
                                 isPaused = true;
-                                outputText = "UPDATE PAUSED - WEEKEND";
+                                outputText = "PAUSED | weekend";
                             }
-                            else if (now > workEnd)
+                            else if (isFriday && now > workEndFr)
                             {
                                 isPaused = true;
-                                outputText = $"UPDATE PAUSED - after work end: {workEnd:HH:mm}";
+                                outputText = $"PAUSED | after work end: {workEndFr:HH:mm} (Fridays)";
+                            }
+                            else if (isMoDo && now > workEndMoDo)
+                            {
+                                isPaused = true;
+                                outputText = $"PAUSED | after work end: {workEndMoDo:HH:mm} (Mo - Do)";
                             }
                             else if (now < workStart)
                             {
                                 isPaused = true;
-                                outputText = $"UPDATE PAUSED - before work start: {workStart:HH:mm}";
+                                outputText = $"PAUSED | before work start: {workStart:HH:mm}";
                             }
-                            else if (now < autoPauseTime)
+                            else if (autoPauseTime < DateTime.MaxValue && now > autoPauseTime)
                             {
                                 isPaused = true;
-                                outputText = $"UPDATE PAUSED - auto pause: {autoPauseTime:HH:mm}";
+                                outputText = $"PAUSED | auto pause: {autoPauseTime:HH:mm} | [R] to resume";
                             }
 
-                            if (isPaused)
+                            Console.SetCursorPosition(0, 1);
+                            Console.WriteLine($"{dayOfWeek}, MoDo={isMoDo}, Fr={isFriday}, Weekend={isWeekend} {workStart:HH:mm:ss} {workEndMoDo:HH:mm:ss} {workEndFr:HH:mm:ss} => isPaused={isPaused}");
+
+                            Console.BackgroundColor = ConsoleColor.DarkYellow;
+                            Console.ForegroundColor = ConsoleColor.Black;
+
+                            if (!isPaused)
                             {
+                                Console.BackgroundColor = ConsoleColor.DarkGreen;
+                                Console.ForegroundColor = ConsoleColor.White;
                                 var newX = rnd.Next(-2, 2);
                                 var newY = rnd.Next(-2, 2);
 
                                 kms.MoveDelta(newX, newY);
-                                outputText = $"x={newX,4}, y={newY,4}";
+                                outputText = $"UPDATE [{newX,2} / {newY,2}]";
                             }
 
-                            Console.SetCursorPosition(0, 0);
-                            Console.WriteLine(outputText.EnsureExactLength(70));
+                            Console.SetCursorPosition(0, 2);
+                            Console.WriteLine($"{dayOfWeek} | {now:HH:mm:ss} | {outputText}".EnsureExactLength(90));
                             Console.ResetColor();
                             nextUpdate = now + updateInterval;
                         }
@@ -97,8 +113,8 @@ namespace KMS
                                         remaining = TimeSpan.Zero;
                                         nextUpdate = DateTime.Now;
                                     }
-                                    Console.ForegroundColor = ConsoleColor.Green;
 
+                                    Console.ForegroundColor = ConsoleColor.Green;
                                     
                                     if (remaining < TimeSpan.FromMinutes(1))
                                     {
@@ -109,16 +125,16 @@ namespace KMS
                                         Console.ForegroundColor = ConsoleColor.DarkYellow;
                                     }
 
-                                    outputText = $"AutoPause: {autoPauseSpan.Hours:00}h  {autoPauseSpan.Minutes:00}m   =>  remaining: {remaining.Hours:00}h  {remaining.Minutes:00}m  {remaining.Seconds:00}s  => {autoPauseTime:HH:mm:ss}";
+                                    outputText = $"Auto Pause | {autoPauseSpan.Hours:00}h  {autoPauseSpan.Minutes:00}m  |  remaining: {remaining.Hours:00}h  {remaining.Minutes:00}m  {remaining.Seconds:00}s  |  {autoPauseTime:HH:mm:ss}";
                                 }
                                 else
                                 {
-                                    Console.ForegroundColor = ConsoleColor.Blue;
-                                    outputText = $"AutoPause: {autoPauseSpan.Hours:00}h  {autoPauseSpan.Minutes:00}m   =>  NOT STARTED (start with [S])";
+                                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                                    outputText = $"Auto Pause | {autoPauseSpan.Hours:00}h  {autoPauseSpan.Minutes:00}m  |  not started (start with [S])";
                                 }
                             }
 
-                            Console.SetCursorPosition(0, 2);
+                            Console.SetCursorPosition(0, 0);
                             Console.WriteLine(outputText.EnsureExactLength(70));
                             Console.ResetColor();
                             nextDisplay = now + displayInterval;
@@ -166,6 +182,7 @@ namespace KMS
                         Console.Clear();
                         break;
 
+                    case ConsoleKey.R:
                     case ConsoleKey.S:
                         if (autoPauseSpan < TimeSpan.MaxValue)
                         {
