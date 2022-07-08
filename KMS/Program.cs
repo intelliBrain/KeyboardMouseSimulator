@@ -120,7 +120,7 @@ namespace KMS
                                 Console.BackgroundColor = ConsoleColor.DarkYellow;
                                 Console.ForegroundColor = ConsoleColor.Black;
                             }
-                            Console.WriteLine($"Day State       : Mo-Do={isMoDo}, Fr={isFriday}, Weekend={isWeekend}, Lunch={isLunch}, BeforeWork={isBeforeWork}, AfterWork={isAfterWork} => Paused={isPaused}");
+                            Console.WriteLine($"Day State       : Mo-Do={isMoDo}, Fr={isFriday}, Weekend={isWeekend}, Lunch={isLunch}, BeforeWork={isBeforeWork}, AfterWork={isAfterWork} => Paused={isPaused}".EnsureLength(100));
                             Console.ResetColor();
 
 
