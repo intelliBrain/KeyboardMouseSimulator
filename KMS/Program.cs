@@ -108,13 +108,17 @@ namespace KMS
                             Console.WriteLine($"{dayOfWeek} | {now:HH:mm:ss} | {outputText}".EnsureExactLength(90));
                             Console.ResetColor();
 
-
                             Console.ForegroundColor = ConsoleColor.DarkGray;
                             Console.SetCursorPosition(0, 5);
                             Console.WriteLine($"Work start      : {workStart:HH:mm}");
                             Console.WriteLine($"Lunch           : {workLunchStart:HH:mm} - {workLunchEnd:HH:mm}");
                             Console.WriteLine($"Work end (Mo-Do): {workEndMoDo:HH:mm}");
                             Console.WriteLine($"Work end (Fr)   : {workEndFr:HH:mm}");
+                            
+                            if (isPaused)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Black;
+                            }
                             Console.WriteLine($"Day State       : Mo-Do={isMoDo}, Fr={isFriday}, Weekend={isWeekend}, Lunch={isLunch}, BeforeWork={isBeforeWork}, AfterWork={isAfterWork} => Paused={isPaused}");
                             Console.ResetColor();
 
