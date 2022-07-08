@@ -74,8 +74,8 @@ namespace KMS
                                 outputText = $"PAUSED | auto pause: {autoPauseTime:HH:mm} | [R] to resume";
                             }
 
-                            Console.SetCursorPosition(0, 1);
-                            Console.WriteLine($"{dayOfWeek}, MoDo={isMoDo}, Fr={isFriday}, Weekend={isWeekend} {workStart:HH:mm:ss} {workEndMoDo:HH:mm:ss} {workEndFr:HH:mm:ss} => isPaused={isPaused}");
+                            //Console.SetCursorPosition(0, 1);
+                            //Console.WriteLine($"{dayOfWeek}, MoDo={isMoDo}, Fr={isFriday}, Weekend={isWeekend} {workStart:HH:mm:ss} {workEndMoDo:HH:mm:ss} {workEndFr:HH:mm:ss} => isPaused={isPaused}");
 
                             Console.BackgroundColor = ConsoleColor.DarkYellow;
                             Console.ForegroundColor = ConsoleColor.Black;
@@ -91,7 +91,7 @@ namespace KMS
                                 outputText = $"UPDATE [{newX,2} / {newY,2}]";
                             }
 
-                            Console.SetCursorPosition(0, 2);
+                            Console.SetCursorPosition(0, 0);
                             Console.WriteLine($"{dayOfWeek} | {now:HH:mm:ss} | {outputText}".EnsureExactLength(90));
                             Console.ResetColor();
                             nextUpdate = now + updateInterval;
@@ -134,7 +134,7 @@ namespace KMS
                                 }
                             }
 
-                            Console.SetCursorPosition(0, 0);
+                            Console.SetCursorPosition(0, 2);
                             Console.WriteLine(outputText.EnsureExactLength(70));
                             Console.ResetColor();
                             nextDisplay = now + displayInterval;
