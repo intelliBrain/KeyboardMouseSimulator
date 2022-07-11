@@ -223,6 +223,12 @@ namespace KMS
                         }
                         break;
 
+                    case ConsoleKey.L:
+                    case ConsoleKey.M:
+                        autoPauseSpan = TimeSpan.FromMinutes(30);
+                        autoPauseTime = now;
+                        break;
+
                     case ConsoleKey.NumPad0:
                         autoPauseSpan = defaultAutoPauseSpan;
                         autoPauseTime = DateTime.MaxValue;
