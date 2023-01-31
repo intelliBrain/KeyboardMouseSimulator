@@ -16,6 +16,7 @@ namespace KMS
             TimeSpan defaultAutoPauseSpan = TimeSpan.FromMinutes(30);
             TimeSpan autoPauseSpan = defaultAutoPauseSpan;
             DateTime autoPauseTime = DateTime.MaxValue;
+            bool overrideRules = false;
 
             var delaySpan = TimeSpan.FromMilliseconds(200);
             var displayInterval = TimeSpan.FromSeconds(0.5);
@@ -87,6 +88,12 @@ namespace KMS
                                 outputText = $"PAUSED | auto pause: {autoPauseTime:HH:mm} | [R] to resume";
                             }
 
+                            if (overrideRules)
+                            {
+                                isPaused = false;
+                                outputText = $"OVERIDE RULES | [O] to toggle";
+                            }
+
                             //Console.SetCursorPosition(0, 1);
                             //Console.WriteLine($"{dayOfWeek}, MoDo={isMoDo}, Fr={isFriday}, Weekend={isWeekend} {workStart:HH:mm:ss} {workEndMoDo:HH:mm:ss} {workEndFr:HH:mm:ss} => isPaused={isPaused}");
 
@@ -101,7 +108,9 @@ namespace KMS
                                 var newY = rnd.Next(-2, 2);
 
                                 kms.MoveDelta(newX, newY);
-                                outputText = $"UPDATE [{newX,2} / {newY,2}]";
+
+                                var ovrText = overrideRules ? " - OVERRIDE RULES" : "";
+                                outputText = $"UPDATE [{newX,2} / {newY,2}]{ovrText}";
                             }
 
                             Console.SetCursorPosition(0, 0);
@@ -221,6 +230,10 @@ namespace KMS
                             else
                                 autoPauseTime = DateTime.MaxValue;
                         }
+                        break;
+
+                    case ConsoleKey.O:
+                        overrideRules = !overrideRules;
                         break;
 
                     case ConsoleKey.L:
